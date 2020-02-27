@@ -25,9 +25,14 @@ def required_body(fields):
         def _wrapped(*args, **kwargs):
 
             data = request.get_json()
-            for i in fields:
-                if i not in data.keys():
-                    return jsonify({'message': 'the key ``{0}`` is required'.format(i)}), 400
+            if data:
+                for i in fields:
+                    if i not in data.keys():
+                        return jsonify({'message': 'the key ``{0}`` is required'.format(i)}), 400
+            else:
+                return jsonify({'message': 'this api expects a json value. sample data here ->{0}'.format(
+                    'https://datapeace-storage.s3-us-west-2.amazonaws.com/dummy_data/users.json')}), 400
+
             return func(*args, **kwargs)
 
         return _wrapped

@@ -24,15 +24,16 @@ class Model(object):
     def bulk_save(self, data):
         pass
 
-    def search_one(self, id) -> dict:
+    def search_one(self, id: int) -> dict:
 
         try:
             pipeline = [
                 {
                     "$match": {
-                        "_id": ObjectId(id)
+                        "id": id
                     }
-                }]
+                },
+                {"$project": {"_id": 0}}]
 
             return db[self._collection].aggregate(pipeline).next()
 
@@ -41,23 +42,24 @@ class Model(object):
         except InvalidId as e:
             raise Exception(str(e))
 
-    def search_bulk(self, order: str, match: dict, page: int, limit: int, project: dict):
+    def search_bulk(self, sort_order: str, sort_by: str, match: dict, page: int, limit: int, project: dict):
         try:
             pipeline = []
             count = 0
-            sort = {"created_date": DESCENDING}
-            if order == 'asc':
-                sort["created_date"] = ASCENDING
 
             # match aggregation pipe
             pipeline.extend([
                 {
                     "$match": match
-                },
-                {
-                    "$sort": sort
                 }
             ])
+            # add sort aggregation pipe
+            if sort_by:
+                sort_dict = {'asc': ASCENDING, 'dsc': DESCENDING}
+                sort = {sort_by: sort_dict[sort_order]}
+                pipeline.append({"$sort": sort})
+
+            # add project aggregation pipe
             if project:
                 pipeline.append(
                     {
@@ -71,9 +73,8 @@ class Model(object):
             counting.append(count_stage)
 
             # pagination stage
-            if limit != None and page != None:
+            if limit is not None and page is not None:
                 skip_stage = {"$skip": limit * page}
-
                 limit_stage = {"$limit": limit}
 
                 pipeline.append(skip_stage)
@@ -88,7 +89,7 @@ class Model(object):
 
             return data, count
 
-        except (StopIteration) as _:
+        except StopIteration as _:
             return None
 
         except Exception as e:
