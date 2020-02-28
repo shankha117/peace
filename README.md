@@ -2,10 +2,8 @@
 
 <div align="center">
 
-# This is gonna be centered!
-</div>
-
 # **`User data Management`**
+</div>
 
 ## **`Description`**
 
