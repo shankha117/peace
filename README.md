@@ -1,9 +1,6 @@
 
 
-<div style="text-align:center"><span style="
- font-family:Georgia; 
- font-size:2em;font-weight: bold;">
- User Data Management</span></div>
+<div style="text-align:center"><span style="font-family:Georgia;font-size:2em;font-weight: bold;">User Data Management</span></div>
 
 ## **`Description`**
 
@@ -11,8 +8,8 @@ Create REST APIs using Python for managing the user’s data.
 
 #### ****`Tech Stack`****
 
-* Flask
-* Mongodb(pymongo)
+* **Flask**
+* **Mongodb(pymongo)**
 
 ## **`Available Operation`**
 
