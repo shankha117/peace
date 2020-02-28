@@ -3,6 +3,7 @@ from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from pymongo import DESCENDING, ASCENDING, errors
 from flask import current_app
+import traceback
 from werkzeug.local import LocalProxy
 
 
@@ -37,7 +38,7 @@ class Model(object):
 
             return db[self._collection].aggregate(pipeline).next()
 
-        except (StopIteration) as _:
+        except StopIteration as _:
             return None
         except InvalidId as e:
             raise Exception(str(e))
@@ -93,34 +94,20 @@ class Model(object):
             return None
 
         except Exception as e:
-            import traceback
             current_app.logger.error(traceback.format_exc())
             raise Exception(e)
 
-    def update_one(self, id: str, match_query: dict, set_query: dict):
+    def update_one(self, id: int, set_query: dict):
 
         try:
-            query = {"_id": ObjectId(id)}
-            if match_query:
-                query.update(match_query)
+            query = {"id": id}
 
             updated = db[self._collection].update_one(query, set_query, False, True)
 
             return updated.modified_count
 
         except Exception as e:
-            import traceback
             current_app.logger.error(traceback.format_exc())
-            raise Exception(e)
-
-    def update_many(self, search_query: dict, set_query: dict):
-        try:
-
-            result = db[self._collection].update_many(search_query, set_query)
-
-            return result.modified_count
-
-        except Exception as e:
             raise Exception(e)
 
     def delete_one(self, query: dict):
@@ -128,11 +115,5 @@ class Model(object):
             db[self._collection].delete_one(query)
             return True
         except Exception as e:
-            raise Exception(e)
-
-    def delete_many(self, query: dict):
-        try:
-            db[self._collection].delete_many(query)
-            return True
-        except Exception as e:
+            current_app.logger.error(traceback.format_exc())
             raise Exception(e)

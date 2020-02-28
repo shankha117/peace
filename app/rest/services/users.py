@@ -45,7 +45,7 @@ class User_Service(object):
             print(sort_order, attribute, name, page, limit)
 
             data, count = User_Data_Layer().get_all_cluster(sort_order=sort_order, sort_by=attribute, name=name,
-                                                            page=page-1, limit=limit)
+                                                            page=page - 1, limit=limit)
 
             next = True if count > (limit * page) else False
 
@@ -57,77 +57,37 @@ class User_Service(object):
             import traceback
             current_app.logger.error(traceback.format_exc())
             raise Exception(e)
-    #
-    # def delete_cluster(self, cluster_id: str):
-    #
-    #     try:
-    #         if not Cluster_Data_Layer().get_cluster_details(cluster_id):
-    #             return jsonify({'error': 'no cluster with the id {0} exists'.format(cluster_id)}), 400
-    #
-    #         # delete all child clusters
-    #         Instance_Data_Layer().delete_all_instance_by_cluster_id(cluster_id=cluster_id)
-    #
-    #         # delete the cluster document
-    #         return Cluster_Data_Layer().delete_cluster(cluster_id=cluster_id)
-    #
-    #     except Exception as e:
-    #         import traceback
-    #         current_app.logger.error(traceback.format_exc())
-    #         raise Exception(e)
-    #
-    # def add_tags(self, cluster_id: str, tags: list):
-    #
-    #     try:
-    #         if not Cluster_Data_Layer().get_cluster_details(cluster_id):
-    #             return jsonify({'error': 'no cluster with the id {0} exists'.format(cluster_id)}), 400
-    #
-    #         result = Cluster_Data_Layer().add_tags(cluster_id=cluster_id, tags=tags)
-    #
-    #         if result != 0:
-    #             return jsonify({'message': '{0} cluster updated'.format(result)}), 200
-    #
-    #         return jsonify({'error': 'Some tags might already be present. {0} cluster '
-    #                                  'updated'.format(result)}), 200
-    #
-    #     except Exception as e:
-    #         import traceback
-    #         current_app.logger.error(traceback.format_exc())
-    #         raise Exception(e)
-    #
-    # def update_tags(self, cluster_id: str, key: str, value: str):
-    #
-    #     try:
-    #         if not Cluster_Data_Layer().get_cluster_details(cluster_id):
-    #             return jsonify({'error': 'no cluster with the id {0} exists'.format(cluster_id)}), 400
-    #
-    #         result = Cluster_Data_Layer().update_tag(cluster_id=cluster_id, key=key, value=value)
-    #
-    #         if result != 0:
-    #             return jsonify({'message': '{0} cluster updated'.format(result)}), 200
-    #
-    #         return jsonify({'error': 'key to be updated not present Or has the same value provide.  {0} cluster '
-    #                                  'updated .'.format(result)}), 200
-    #
-    #     except Exception as e:
-    #         import traceback
-    #         current_app.logger.error(traceback.format_exc())
-    #         raise Exception(e)
-    #
-    # def delete_tags(self, cluster_id: str, keys: list):
-    #
-    #     try:
-    #         if not Cluster_Data_Layer().get_cluster_details(cluster_id):
-    #             return jsonify({'error': 'no cluster with the id {0} exists'.format(cluster_id)}), 400
-    #
-    #         result = Cluster_Data_Layer().delete_tag(cluster_id=cluster_id, key_list=keys)
-    #
-    #         if result != 0:
-    #             return jsonify({'message': '{0} cluster updated'.format(result)}), 200
-    #
-    #         return jsonify({'error': 'key or keys to be deleted not present.  {0} cluster '
-    #                                  'updated .'.format(result)}), 200
-    #
-    #     except Exception as e:
-    #         import traceback
-    #         current_app.logger.error(traceback.format_exc())
-    #         raise Exception(e)
+
+    def delete_user(self, user_id: int):
+
+        try:
+            if not User_Data_Layer().get_user_details(user_id):
+                return jsonify({'error': 'no user with the id {0} exists'.format(user_id)}), 400
+
+            # delete the user
+
+            return User_Data_Layer().delete_user(user_id=user_id)
+
+        except Exception as e:
+            import traceback
+            current_app.logger.error(traceback.format_exc())
+            raise Exception(e)
+
+    def update_user(self, user_id: int, first_name: str, last_name: str, age: int):
+
+        try:
+            if not User_Data_Layer().get_user_details(user_id):
+                return jsonify({'error': 'no user with the id {0} exists'.format(user_id)}), 400
+
+            result = User_Data_Layer().update_user(user_id=user_id, first_name=first_name, last_name=last_name, age=age)
+
+            if result != 0:
+                current_app.logger.info('{0} user updated'.format(result))
+                return jsonify({'message': '{0} user updated'.format(result)}), 200
+
+            return jsonify({'message': 'no user updated'.format(result)}), 200
+
+        except Exception as e:
+            import traceback
+            current_app.logger.error(traceback.format_exc())
+            raise Exception(e)

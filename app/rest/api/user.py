@@ -85,33 +85,35 @@ def user_details(user_id):
 
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
-#
-#
-# @peace_bp.route('/users/<user_id>', methods=['DELETE'])
-# def delete_cluster(cluster_id):
-#     try:
-#         res = Cluster_Service().delete_cluster(cluster_id=cluster_id)
-#
-#         if res:
-#             return jsonify({'message': 'cluster {0} deleted'.format(cluster_id)}), 200
-#
-#     except Exception as ex:
-#
-#         return jsonify({'message': str(ex)}), 500
-#
-#
-# @peace_bp.route('/users/<user_id>', methods=['PUT'])
-# @required_body(fields=['key','value'])
-# def update_cluster_tags(cluster_id):
-#     try:
-#         post_data = request.get_json()
-#
-#         key = expect(post_data.get('key'), str, 'key')
-#
-#         value = expect(post_data.get('value'), str, 'value')
-#
-#         return Cluster_Service().update_tags(cluster_id=cluster_id, key=key, value=value)
-#
-#     except Exception as ex:
-#
-#         return jsonify({'message': str(ex)}), 500
+
+
+@peace_bp.route('/users/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    try:
+        res = User_Service().delete_user(user_id=int(user_id))
+        if res:
+            current_app.logger.info('user {0} deleted'.format(user_id))
+            return jsonify({'message': 'user {0} deleted'.format(user_id)}), 200
+
+    except Exception as ex:
+
+        return jsonify({'message': str(ex)}), 500
+
+
+@peace_bp.route('/users/<user_id>', methods=['PUT'])
+@required_body(fields=[])
+def update_user(user_id):
+    try:
+        post_data = request.get_json()
+
+        first_name = expect(post_data.get('first_name'), str, 'first_name')
+
+        last_name = expect(post_data.get('last_name'), str, 'last_name')
+
+        age = expect(post_data.get('age'), int, 'age')
+
+        return User_Service().update_user(user_id=int(user_id), first_name=first_name, last_name=last_name, age=age)
+
+    except Exception as ex:
+
+        return jsonify({'message': str(ex)}), 500

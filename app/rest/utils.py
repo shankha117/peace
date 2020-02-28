@@ -30,8 +30,18 @@ def required_body(fields):
                     if i not in data.keys():
                         return jsonify({'message': 'the key ``{0}`` is required'.format(i)}), 400
             else:
-                return jsonify({'message': 'this api expects a json value. sample data here ->{0}'.format(
-                    'https://datapeace-storage.s3-us-west-2.amazonaws.com/dummy_data/users.json')}), 400
+                if request.method == 'POST':
+                    return jsonify({'message': 'this api expects a json value. sample data here ->{0}'.format(
+                        'https://datapeace-storage.s3-us-west-2.amazonaws.com/dummy_data/users.json')}), 400
+
+                if request.method == 'PUT':
+                    doc = {
+                        "first_name": "Josephine",
+                        "last_name": "Darakjy",
+                        "age": 48
+                    }
+                    return jsonify({'message': 'this api expects a json value. sample data here ->{0}'.format(
+                        doc)}), 400
 
             return func(*args, **kwargs)
 

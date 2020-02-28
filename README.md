@@ -1,51 +1,48 @@
 
-## **`Cloud Machine Management`**
+
+<div style="text-align:center"><span style="
+ font-family:Georgia; 
+ font-size:2em;font-weight: bold;">
+ User Data Management</span></div>
 
 ## **`Description`**
 
-There will be multiple clusters and each cluster will have zero or more machines. Each machine will have zero or more tags.
+Create REST APIs using Python for managing the user’s data.
 
-Also, each cluster will have a name and a cloud region, each machine will have a name, ip address, an instance-type.
+#### ****`Tech Stack`****
 
-The system should allow users to create clusters, create machines in a cluster, add tags to the machine when creating them, delete machines and clusters and perform operations like start, stop, reboot on a group of machines using tags.
-
+* Flask
+* Mongodb(pymongo)
 
 ## **`Available Operation`**
 
 
 * examples
 
-    :zap: Create, Modify, Delete Clusters
+    :zap: Create a user
     
-    :zap: Create Instances under clusters
+    :zap: Retrieve a user data or all users data with filter parameter
     
-    :zap: Modify the Tags of cluster and instancescle
+    :zap: Update name,age of the user
     
-    :zap: ON, OFF, REBOOT specific instances or multiple instances using tags
+    :zap: Delete a user
     
-
 
 ## :rocket:&nbsp;**`Run Project`**
 
-* ###**Manually** -
-    * install a virtual environment
-    * install packages from reqirement.txt
+* install a virtual environment
+* install packages from reqirement.txt
+    
+    `pip install requirements.txt` 
+
+* simply run the start_app.sh file
+
+    `sh start_app.sh`
         
-        `pip install requirements.txt` 
-    
-    * simply run the start_app.sh file
-    
-        `sh start_app.sh`
-        
-* ###**`Docker`** -
-    * install docker, docker-compose
-    * run the compose file from root directory
-    
-        `docker-compose up`
         
 ## :detective:&nbsp;**`Validate the Project`**
 
-* after gunicorn is running you can visit to get the api details
+* after gunicorn is running you can check the swagger for api details
 
     :link: `http://localhost:8081/swagger/`
     

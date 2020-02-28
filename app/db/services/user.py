@@ -76,55 +76,33 @@ class User_Data_Layer(Model):
             current_app.logger.error(e)
             raise Exception(e)
 
-    # def delete_cluster(self, cluster_id: str):
-    #
-    #     try:
-    #         query = {"_id": ObjectId(cluster_id)}
-    #
-    #         return self.delete_one(query)
-    #
-    #     except Exception as e:
-    #         current_app.logger.error(e)
-    #         raise Exception(e)
-    #
-    # def add_tags(self, cluster_id: str, tags: list):
-    #
-    #     try:
-    #         tags_list = list(i[Cluster.tags_key.value['rel']] for i in tags)
-    #
-    #         query_string = {Cluster.tags_key.value['abs']: {"$nin": tags_list}}
-    #
-    #         set_query = {"$addToSet": {Cluster.tags.value['abs']: {"$each": tags}}}
-    #
-    #         return self.update_one(id=cluster_id, match_query=query_string, set_query=set_query)
-    #
-    #     except Exception as e:
-    #         current_app.logger.error(e)
-    #         raise Exception(e)
-    #
-    # def update_tag(self, cluster_id: str, key: str, value: str):
-    #
-    #     try:
-    #         query_string = {Cluster.tags.value['abs']: {"$elemMatch": {Cluster.tags_key.value['rel']: key}}}
-    #
-    #         set_query = {"$set": {Cluster.tags.value['abs'] + ".$." + Cluster.tags_value.value['rel']: value}}
-    #
-    #         return self.update_one(id=cluster_id, match_query=query_string, set_query=set_query)
-    #
-    #     except Exception as e:
-    #         current_app.logger.error(e)
-    #         raise Exception(e)
-    #
-    # def delete_tag(self, cluster_id: str, key_list: list):
-    #
-    #     try:
-    #         query_string = {}
-    #
-    #         set_query = {"$pull": {Cluster.tags.value['abs']: {Cluster.tags_key.value['rel']:
-    #                                                                {"$in": key_list}}}}
-    #
-    #         return self.update_one(id=cluster_id, match_query=query_string, set_query=set_query)
-    #
-    #     except Exception as e:
-    #         current_app.logger.error(e)
-    #         raise Exception(e)
+    def delete_user(self, user_id: int):
+
+        try:
+            query = {"id": user_id}
+
+            return self.delete_one(query)
+
+        except Exception as e:
+            current_app.logger.error(e)
+            raise Exception(e)
+
+    def update_user(self, user_id: int, first_name: str, last_name: str, age: int):
+
+        try:
+            query_doc = {}
+
+            if first_name:
+                query_doc[User.FIRST_NAME.value] = first_name
+            if last_name:
+                query_doc[User.LAST_NAME.value] = last_name
+            if age:
+                query_doc[User.AGE.value] = age
+
+            set_query = {"$set": query_doc}
+
+            return self.update_one(id=user_id, set_query=set_query)
+
+        except Exception as e:
+            current_app.logger.error(traceback.format_exc())
+            raise Exception(e)
