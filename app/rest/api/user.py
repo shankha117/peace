@@ -5,6 +5,10 @@ from app.rest.utils import expect, required_body, required_params
 from app.rest.services.users import User_Service
 
 
+@peace_bp.route('/')
+def hello_world():
+    return 'Hello, World!'
+
 @peace_bp.route('/users', methods=['POST'])
 @required_body(fields=['id', 'first_name', 'email'])
 def create_user():
@@ -36,7 +40,7 @@ def create_user():
                                                  state=state, zip=zip, email=email, web=web,
                                                  age=age)
 
-        return jsonify({'message': 'new user created', 'user_id': inserted_id}), 201
+        return jsonify({'message': 'new user created', 'user_id': id}), 201
 
     except BadRequest as ex:
 

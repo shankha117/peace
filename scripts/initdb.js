@@ -1,8 +1,8 @@
-var dbadmin = db.getSiblingDB('cmm');
+var dbadmin = db.getSiblingDB('peace_db');
 dbadmin.createUser(
   {
-    user: "cmmuser",
-    pwd: "cmm#secret123",
-    roles: [ { role: "readWrite", db: "cmm" }]
+    user: "peace_user",
+    pwd: "peace#secret123",
+    roles: [ { role: "readWrite", db: "peace_db" }]
   }
 );
