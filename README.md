@@ -1,5 +1,11 @@
-<p align="center" style="font-size: 25px;font-weight: 900;">User data Management</p>
+<!--<p align="center" style="font-size: 25px;font-weight: 900;">User data Management</p>-->
 
+<div align="center">
+
+# This is gonna be centered!
+</div>
+
+# **`User data Management`**
 
 ## **`Description`**
 
