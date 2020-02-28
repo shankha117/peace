@@ -1,6 +1,5 @@
+<p align="center" style="font-size: 25px;font-weight: 900;">User data Management</p>
 
-
-<div style="text-align:center"><span style="font-family:Georgia;font-size:2em;font-weight: bold;">User Data Management</span></div>
 
 ## **`Description`**
 
