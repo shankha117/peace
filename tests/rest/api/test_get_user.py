@@ -8,20 +8,20 @@ Post_mock_request_headers = {
     'Content-Type': 'application/json'
 }
 
-available_user_id = '123399999'
-unavailable_user_id = '30000'
+available_user_id = '2'
+unavailable_user_id = '10231'
 
 mock_response = {
-    "id": 123399999,
-    "first_name": "fn2",
-    "last_name": "ln3",
-    "company_name": "Benton, John B Jr",
-    "city": "New Orleans",
-    "state": "LA",
-    "zip": 70116,
-    "email": "jbutt@gmail.com",
-    "web": "http://www.bentonjohnbjr.com",
-    "age": 89
+    "age": 48,
+    "city": "Brighton",
+    "company_name": "Chanay, Jeffrey A Esq",
+    "email": "josephine_darakjy@darakjy.org",
+    "first_name": "Josephine",
+    "id": 2,
+    "last_name": "Darakjy",
+    "state": "MI",
+    "web": "http://www.chanayjeffreyaesq.com",
+    "zip": 48116
 }
 
 

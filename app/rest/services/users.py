@@ -66,7 +66,11 @@ class User_Service(object):
 
             # delete the user
 
-            return User_Data_Layer().delete_user(user_id=user_id)
+            deleted_count = User_Data_Layer().delete_user(user_id=user_id)
+
+            if deleted_count:
+                current_app.logger.info('user {0} deleted'.format(user_id))
+                return jsonify({'message': '{0} user deleted'.format(deleted_count)}), 200
 
         except Exception as e:
             import traceback

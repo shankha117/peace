@@ -112,8 +112,9 @@ class Model(object):
 
     def delete_one(self, query: dict):
         try:
-            db[self._collection].delete_one(query)
-            return True
+
+            return db[self._collection].delete_one(query).deleted_count
+
         except Exception as e:
             current_app.logger.error(traceback.format_exc())
             raise Exception(e)

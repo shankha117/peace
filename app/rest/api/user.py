@@ -94,10 +94,7 @@ def user_details(user_id):
 @peace_bp.route('/users/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
     try:
-        res = User_Service().delete_user(user_id=int(user_id))
-        if res:
-            current_app.logger.info('user {0} deleted'.format(user_id))
-            return jsonify({'message': 'user {0} deleted'.format(user_id)}), 200
+        return User_Service().delete_user(user_id=int(user_id))
 
     except Exception as ex:
 

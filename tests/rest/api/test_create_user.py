@@ -8,7 +8,7 @@ Post_mock_request_headers = {
 }
 
 mock_request_data = {
-    "id": 123399998,
+    "id": 10235,
     "first_name": "fn2",
     "last_name": "ln3",
     "company_name": "Benton, John B Jr",
@@ -39,7 +39,7 @@ def test_create_user_pass(client):
 
 def test_create_user_fail(client):
     response = client.post(url, json=mock_request_data, headers=Post_mock_request_headers)
-    assert response.get_data() == b'{\n  "message": "id -  123399998 already exists"\n}\n'
+    assert response.get_data() == b'{\n  "message": "id -  10235 already exists"\n}\n'
     assert response.status_code == 500
 
 
