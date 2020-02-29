@@ -44,7 +44,7 @@ Create REST APIs using Python for managing the user’s data.
 
 * after gunicorn is running you can check the swagger for api details
 
-    `link http://localhost:8081/swagger/`
+    :link: [http://localhost:8081/swagger/]()
 
 * from the root run the test cases, with -
     
