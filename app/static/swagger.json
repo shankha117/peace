@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "description": "cmm swagger",
+    "description": "User Data ManageMent swagger",
     "version": "1.0",
-    "title": "Cloud Machine Management",
+    "title": "User Data ManageMent",
     "contact": {
       "email": "shankha.shuvro@hotmail.com"
     }
@@ -23,19 +23,19 @@
     }
   ],
   "paths": {
-    "/cluster": {
+    "/users": {
       "post": {
         "tags": [
-          "clusters"
+          "users"
         ],
-        "summary": "Create new cluster",
+        "summary": "Create new user",
         "description": "",
-        "operationId": "createcluster",
+        "operationId": "createuser",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Cluster.create.input"
+                "$ref": "#/components/schemas/Users.create.input"
               }
             }
           },
@@ -43,32 +43,35 @@
           "required": true
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cluster.create.response"
+                  "$ref": "#/components/schemas/Users.create.response"
                 },
                 "example": {
-                  "cluster_id": "5e430c5aa77ab8f674cc86b1",
-                  "message": "cluster created"
+                  "user_id": "5e430c5aa77ab8f674cc86b1",
+                  "message": "new user created"
                 }
               }
             }
           },
           "400": {
             "description": "Failure"
+          },
+          "500": {
+            "description": "User already present"
           }
         }
       },
       "get": {
         "tags": [
-          "clusters"
+          "users"
         ],
-        "summary": "Get all clusters",
-        "description": "Get one or more clusters based on given filter criteria",
-        "operationId": "Getclusters",
+        "summary": "Get all users",
+        "description": "Get one or more users based on given filter criteria",
+        "operationId": "Getusers",
         "parameters": [
           {
             "$ref": "#/components/parameters/offsetParam"
@@ -77,13 +80,10 @@
             "$ref": "#/components/parameters/limitParam"
           },
           {
-            "$ref": "#/components/parameters/cluster_type"
+            "$ref": "#/components/parameters/name"
           },
           {
-            "$ref": "#/components/parameters/sort_order"
-          },
-          {
-            "$ref": "#/components/parameters/tag_name"
+            "$ref": "#/components/parameters/sort"
           }
         ],
         "responses": {
@@ -92,7 +92,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClusterGetAll"
+                  "$ref": "#/components/schemas/UsersGetAll"
                 }
               }
             }
@@ -103,19 +103,18 @@
         }
       }
     },
-    "/cluster/{cluster_id}": {
+    "/users/{users_id}": {
       "get": {
         "tags": [
-          "clusters"
+          "users"
         ],
-        "summary": "Get the details of cluster",
+        "summary": "Get the details of user",
         "description": "",
-        "operationId": "ClusterDetails",
+        "operationId": "UserDetails",
         "parameters": [
           {
             "in": "path",
-            "name": "cluster_id",
-            "description": "Cluster ID",
+            "name": "users_id",
             "required": true,
             "schema": {
               "type": "string"
@@ -127,8 +126,29 @@
             "description": "Success",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClusterGetResponse"
+                "examples": {
+                  "success": {
+                    "summary": "Example of a successful response",
+                    "value": {
+                      "id": 10234,
+                      "first_name": "fn2",
+                      "last_name": "ln3",
+                      "company_name": "Benton, John B Jr",
+                      "city": "New Orleans",
+                      "state": "LA",
+                      "zip": 70116,
+                      "email": "jbutt@gmail.com",
+                      "web": "http://www.bentonjohnbjr.com",
+                      "age": 89
+                    }
+                  },
+                  "error": {
+                    "summary": "Example of an unsuccessful response",
+                    "description": "No user with this ID is present",
+                    "value": {
+                      "message": "no users found"
+                    }
+                  }
                 }
               }
             }
@@ -140,16 +160,16 @@
       },
       "delete": {
         "tags": [
-          "clusters"
+          "users"
         ],
-        "summary": "Delete the cluster by ID",
+        "summary": "Delete the user by ID",
         "description": "",
-        "operationId": "deleteCluster",
+        "operationId": "delete User",
         "parameters": [
           {
             "in": "path",
-            "name": "cluster_id",
-            "description": "Cluster ID",
+            "name": "users_id",
+            "description": "User ID",
             "required": true,
             "schema": {
               "type": "string"
@@ -165,98 +185,27 @@
                   "$ref": "#/components/schemas/DeleteResponse"
                 },
                 "example": {
-                  "message": "cluster 5e431601a77ab8f674cc86b6 deleted"
+                  "message": "1 user deleted"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid Cluster"
-          }
-        }
-      }
-    },
-    "/cluster/{cluster_id}/tags": {
-      "post": {
-        "tags": [
-          "clusters"
-        ],
-        "summary": "add tags to the cluster ID",
-        "description": "",
-        "operationId": "cluster_tags",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "cluster_id",
-            "description": "cluster ID",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "tags": {
-                    "type": "array",
-                    "items": {
-                      "minItems": 1,
-                      "type": "object",
-                      "properties": {
-                        "key": {
-                          "type": "string"
-                        },
-                        "value": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "description": "add tags to cluster",
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "1 cluster updated"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid cluster"
+            "description": "No user with this ID is present"
           }
         }
       },
       "put": {
         "tags": [
-          "clusters"
+          "users"
         ],
-        "summary": "update tags to the cluster ID",
+        "summary": "Update user data",
         "description": "",
-        "operationId": "cluster_tags_update",
+        "operationId": "user update",
         "parameters": [
           {
             "in": "path",
-            "name": "cluster_id",
-            "description": "cluster ID",
+            "name": "users_id",
             "required": true,
             "schema": {
               "type": "string"
@@ -269,291 +218,25 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "key": {
-                    "type": "string",
-                    "example": "owner"
+                  "first_name": {
+                    "type": "string"
                   },
-                  "value": {
-                    "type": "string",
-                    "example": "teamB"
+                  "last_name": {
+                    "type": "string"
+                  },
+                  "age": {
+                    "type": "integer"
                   }
-                }
-              }
-            }
-          },
-          "description": "add tags to cluster",
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "1 cluster updated"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid cluster"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "clusters"
-        ],
-        "summary": "delete tags to the cluster ID",
-        "description": "",
-        "operationId": "cluster_tags_delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "cluster_id",
-            "description": "cluster ID",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "tags",
-            "required": true,
-            "description": "The list of tag keys to be deleted",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "example": [
-              "environment",
-              "owner"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "1 cluster updated"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid cluster"
-          }
-        }
-      }
-    },
-    "/instance": {
-      "post": {
-        "tags": [
-          "instances"
-        ],
-        "summary": "Add new instance",
-        "description": "",
-        "operationId": "Createinstance",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Instance.create.input"
-              }
-            }
-          },
-          "description": "Add new instance",
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Cluster.create.response"
                 },
                 "example": {
-                  "instance_id": "5e430c5aa77ab8f674cc86b1",
-                  "message": "instance created"
+                  "first_name": "Josephine",
+                  "last_name": "Darakjy",
+                  "age": 48
                 }
               }
             }
           },
-          "400": {
-            "description": "Failure"
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "instances"
-        ],
-        "summary": "Get list of instances",
-        "description": "",
-        "operationId": "getinstances",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/offsetParam"
-          },
-          {
-            "$ref": "#/components/parameters/limitParam"
-          },
-          {
-            "$ref": "#/components/parameters/instance_type"
-          },
-          {
-            "$ref": "#/components/parameters/sort_order"
-          },
-          {
-            "$ref": "#/components/parameters/tag_name"
-          },
-          {
-            "$ref": "#/components/parameters/state"
-          },
-          {
-            "$ref": "#/components/parameters/cluster_id"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InstanceGetAll"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure"
-          }
-        }
-      }
-    },
-    "/instance/{instance_id}": {
-      "get": {
-        "tags": [
-          "instances"
-        ],
-        "summary": "Get the instance of cluster",
-        "description": "",
-        "operationId": "instanceDetails",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "instance_id",
-            "description": "Instance ID",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InstanceGetResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "instances"
-        ],
-        "summary": "Delete the instance by ID",
-        "description": "",
-        "operationId": "deleteInstance",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "instance_id",
-            "description": "Instance ID",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteResponse"
-                },
-                "example": {
-                  "message": "instance 5e431601a77ab8f674cc86b6 deleted"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid instance"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "instances"
-        ],
-        "summary": "perform task on instance",
-        "description": "",
-        "operationId": "performtask",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "instance_id",
-            "description": "Instance ID",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "task": {
-                    "type": "string",
-                    "example": "ON"
-                  }
-                }
-              }
-            }
-          },
-          "description": "perform task on instance",
+          "description": "update userr",
           "required": true
         },
         "responses": {
@@ -567,78 +250,22 @@
                     "message": {
                       "type": "string"
                     }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Example of a successful response",
+                    "value": {
+                      "first_name": "fn2",
+                      "last_name": "ln3",
+                      "age": 89
+                    }
                   },
-                  "example": {
-                    "message": "Operation OFF performed on 5e438ed05ff0099c5ef38e03"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Failure"
-          }
-        }
-      }
-    },
-    "/instance/{instance_id}/tags": {
-      "post": {
-        "tags": [
-          "instances"
-        ],
-        "summary": "add tags to the cluster ID",
-        "description": "",
-        "operationId": "instance_tags",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "instance_id",
-            "description": "instance ID",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "tags": {
-                    "type": "array",
-                    "items": {
-                      "minItems": 1,
-                      "type": "object",
-                      "properties": {
-                        "key": {
-                          "type": "string"
-                        },
-                        "value": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "description": "add tags to cluster",
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "1 cluster updated"
+                  "error": {
+                    "summary": "Example of an unsuccessful response",
+                    "description": "No Updates Happend",
+                    "value": {
+                      "message": "no user updated"
                     }
                   }
                 }
@@ -646,200 +273,7 @@
             }
           },
           "400": {
-            "description": "Invalid clusters"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "instances"
-        ],
-        "summary": "update tags to the instance ID",
-        "description": "",
-        "operationId": "instance_tags_update",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "instance_id",
-            "description": "instance ID",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "key": {
-                    "type": "string",
-                    "example": "owner"
-                  },
-                  "value": {
-                    "type": "string",
-                    "example": "teamB"
-                  }
-                }
-              }
-            }
-          },
-          "description": "add tags to cluster",
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "1 cluster updated"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid instance"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "instances"
-        ],
-        "summary": "delete tags to the instance ID",
-        "description": "",
-        "operationId": "instance_tags_delete",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "instance_id",
-            "description": "instance ID",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "tags",
-            "required": true,
-            "description": "The list of tag keys to be deleted",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
-            "example": [
-              "environment",
-              "owner"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "1 cluster updated"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid instance"
-          }
-        }
-      }
-    },
-    "/instance/{instance_id}/bulk": {
-      "post": {
-        "tags": [
-          "instances"
-        ],
-        "summary": "Get the instance file content",
-        "description": "contents of the instance",
-        "operationId": "InstanceTags",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "instance_id",
-            "description": "instance ID",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "$ref": "#/components/parameters/instance_type"
-          },
-          {
-            "$ref": "#/components/parameters/tag_name"
-          },
-          {
-            "$ref": "#/components/parameters/state"
-          },
-          {
-            "$ref": "#/components/parameters/cluster_id_required_false"
-          },
-          {
-            "$ref": "#/components/parameters/operation"
-          },
-          {
-            "$ref": "#/components/parameters/is_async"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "operation ``ON`` successfully performed on total-1 instances"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "202": {
-            "description": "perform async bulk task",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "bulk operation accepted"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
+            "description": "Invalid user"
           }
         }
       }
@@ -847,12 +281,8 @@
   },
   "servers": [
     {
-      "url": "http://13.235.8.67:8000/cmm/api/v1",
-      "description": "AWS ECE"
-    },
-    {
-      "url": "http://localhost:8081/cmm/api/v1",
-      "description": "local"
+      "url": "http://localhost:8081/peace/v1/api",
+      "description": "localhost"
     }
   ],
   "components": {
@@ -871,140 +301,38 @@
       "limitParam": {
         "in": "query",
         "name": "limit",
-        "required": true,
+        "required": false,
         "description": "The numbers of items to return.",
         "schema": {
           "type": "integer",
           "minimum": 1,
-          "default": 10
+          "default": 5
         }
       },
-      "sort_order": {
+      "name": {
         "in": "query",
-        "name": "order",
-        "description": "Optional filter based on status",
+        "name": "name",
+        "description": "search user by name as a substring in First Name or Last Name",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "example": "James"
+        }
+      },
+      "sort": {
+        "in": "query",
+        "name": "sort",
+        "description": "name of attribute, the items to be sorted. By default it returns items in ascending order if  this parameter exist, and if the value of parameter is prefixed with ‘-’ character, then it should return items in descending order",
         "required": false,
         "schema": {
           "type": "string",
           "enum": [
-            "asc",
-            "desc"
-          ]
-        }
-      },
-      "cluster_id_required_false": {
-        "in": "query",
-        "name": "cluster_id",
-        "description": "Optional filter on cluster_id of instances",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "example": "5e430c5aa77ab8f674cc86b1"
-        }
-      },
-      "cluster_id": {
-        "in": "query",
-        "name": "cluster_id",
-        "description": "Optional filter on cluster_id of instances",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "example": "5e430c5aa77ab8f674cc86b1"
-        }
-      },
-      "tag_name": {
-        "in": "query",
-        "name": "tags",
-        "description": "Optional filter based on tag_name",
-        "required": false,
-        "schema": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "key": {
-                "type": "string",
-                "example": "environment"
-              },
-              "value": {
-                "type": "string",
-                "example": "production"
-              }
-            }
-          }
-        },
-        "example": [
-          {
-            "key": "environment",
-            "value": "production"
-          },
-          {
-            "key": "storage",
-            "value": "production"
-          }
-        ]
-      },
-      "instance_type": {
-        "in": "query",
-        "name": "instance_type",
-        "description": "Optional filter based on cluster type",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": [
-            "m1.small"
-          ]
-        }
-      },
-      "operation": {
-        "in": "query",
-        "name": "state",
-        "description": "Optional filter based on cluster type",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "enum": [
-            "ON",
-            "OFF"
-          ]
-        }
-      },
-      "is_async": {
-        "in": "query",
-        "name": "state",
-        "description": "Optional filter based on cluster type",
-        "required": false,
-        "schema": {
-          "type": "boolean",
-          "enum": [
-            true,
-            false
-          ],
-          "default": true
-        }
-      },
-      "state": {
-        "in": "query",
-        "name": "state",
-        "description": "Optional filter based on cluster type",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": [
-            "ON",
-            "OFF"
-          ]
-        }
-      },
-      "cluster_type": {
-        "in": "query",
-        "name": "type",
-        "description": "Optional filter based on cluster type",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "enum": [
-            "AWS::ECS::Cluster"
+            "age",
+            "-age",
+            "id",
+            "-id",
+            "zip",
+            "-zip"
           ]
         }
       }
@@ -1018,65 +346,65 @@
       }
     },
     "schemas": {
-      "Cluster.create.input": {
+      "Users.create.input": {
         "type": "object",
         "required": [
-          "clustername",
-          "type",
-          "region"
+          "id",
+          "first_name",
+          "email"
         ],
         "properties": {
-          "templateformat": {
-            "type": "string",
-            "example": "sample templateformat"
+          "id": {
+            "type": "integer"
           },
-          "type": {
+          "first_name": {
             "type": "string"
           },
-          "region": {
+          "last_name": {
             "type": "string"
           },
-          "clustername": {
-            "type": "string",
-            "example": "Legal"
+          "company_name": {
+            "type": "string"
           },
-          "properties": {
-            "type": "object",
-            "example": "MSA"
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "zip": {
+            "type": "integer"
+          },
+          "email": {
+            "type": "string"
+          },
+          "web": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer"
           }
         },
         "example": {
-          "templateformat": "2010-09-09",
-          "type": "AWS::ECS::Cluster",
-          "region": "us-east-1a",
-          "clustername": "MyCluster4",
-          "properties": {
-            "clustersettings": [
-              {
-                "name": "containerInsights",
-                "value": "enabled"
-              }
-            ],
-            "tags": [
-              {
-                "key": "environment",
-                "value": "production"
-              },
-              {
-                "key": "storage",
-                "value": "production"
-              }
-            ]
-          }
+          "id": 10234,
+          "first_name": "fn2",
+          "last_name": "ln3",
+          "company_name": "Benton, John B Jr",
+          "city": "New Orleans",
+          "state": "LA",
+          "zip": 70116,
+          "email": "jbutt@gmail.com",
+          "web": "http://www.bentonjohnbjr.com",
+          "age": 89
         },
         "xml": {
-          "name": "Cluster"
+          "name": "User"
         }
       },
-      "Cluster.create.response": {
+      "Users.create.response": {
         "type": "object",
         "properties": {
-          "cluster_id": {
+          "user_id": {
             "type": "string"
           },
           "message": {
@@ -1084,78 +412,10 @@
           }
         },
         "xml": {
-          "name": "ClusterResultResponse"
+          "name": "UserResultResponse"
         }
       },
-      "Instance.create.input": {
-        "type": "object",
-        "required": [
-          "clustername",
-          "type",
-          "region"
-        ],
-        "properties": {
-          "cluster_id": {
-            "type": "string",
-            "example": "sample templateformat"
-          },
-          "instance_name": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "keypair": {
-            "type": "object"
-          },
-          "instance_type": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            }
-          },
-          "security_groups": {
-            "type": "object"
-          }
-        },
-        "example": {
-          "cluster_id": "5e406a5fc2253fbbd3094783",
-          "instance_name": "instance3",
-          "type": "AWS::EC2::Instance",
-          "keypair": {
-            "name": "mycluster_key",
-            "Format": "SSH public key file format"
-          },
-          "instance_type": "m1.small",
-          "tags": [
-            {
-              "key": "owner",
-              "value": "TeamA"
-            },
-            {
-              "key": "environment",
-              "value": "production"
-            }
-          ],
-          "security_groups": {
-            "name": "some_name",
-            "VPC": "some_id"
-          },
-          "image": {
-            "os": "ubuntu",
-            "virtualization": "HVM",
-            "Architecture": "32",
-            "Storage": "EBS"
-          }
-        },
-        "xml": {
-          "name": "Instance"
-        }
-      },
-      "InstanceGetAll": {
+      "UsersGetAll": {
         "type": "object",
         "properties": {
           "count": {
@@ -1165,166 +425,9 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/InstanceGetResponse"
+              "$ref": "#/components/schemas/Users.create.input"
             }
           }
-        }
-      },
-      "InstanceGetResponse": {
-        "type": "object",
-        "properties": {
-          "Instance_details": {
-            "type": "object",
-            "properties": {
-              "_id": {
-                "type": "string"
-              },
-              "cluster_id": {
-                "type": "string"
-              },
-              "state": {
-                "type": "string"
-              },
-              "instance_name": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string"
-              },
-              "region": {
-                "type": "string"
-              },
-              "created_date": {
-                "type": "string"
-              },
-              "updated_date": {
-                "type": "string"
-              },
-              "properties": {
-                "type": "object"
-              }
-            }
-          }
-        },
-        "example": {
-          "_id": "5e438ed05ff0099c5ef38e03",
-          "cluster_id": "5e438ec65ff0099c5ef38e01",
-          "created_date": "2020-02-12 11:06:16",
-          "instance_name": "instance3",
-          "properties": {
-            "image": {
-              "Architecture": "32",
-              "Storage": "EBS",
-              "os": "ubuntu",
-              "virtualization": "HVM"
-            },
-            "instance_type": "m1.small",
-            "ip_address": "210.20.1.49",
-            "keypair": {
-              "Format": "SSH public key file format",
-              "name": "mycluster_key"
-            },
-            "security_groups": {
-              "VPC": "some_id",
-              "name": "some_name"
-            },
-            "tags": [
-              {
-                "key": "owner",
-                "value": "TeamA"
-              },
-              {
-                "key": "environment",
-                "value": "production"
-              }
-            ]
-          },
-          "region": "us-east-1a",
-          "state": "OFF",
-          "type": "AWS::EC2::Instance",
-          "updated_date": "2020-02-12 11:06:16"
-        },
-        "xml": {
-          "name": "InstanceResponse"
-        }
-      },
-      "ClusterGetAll": {
-        "type": "object",
-        "properties": {
-          "count": {
-            "type": "integer",
-            "example": 10
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ClusterGetResponse"
-            }
-          }
-        }
-      },
-      "ClusterGetResponse": {
-        "type": "object",
-        "properties": {
-          "instance_details": {
-            "type": "object",
-            "properties": {
-              "_id": {
-                "type": "string"
-              },
-              "cluster_name": {
-                "type": "string",
-                "example": "Sample templateformat"
-              },
-              "type": {
-                "type": "string",
-                "example": "AWS::ECS::Cluster"
-              },
-              "region": {
-                "type": "string",
-                "example": "us-east-1a"
-              },
-              "created_date": {
-                "type": "string"
-              },
-              "updated_date": {
-                "type": "string"
-              },
-              "properties": {
-                "type": "object"
-              }
-            }
-          }
-        },
-        "example": {
-          "_id": "5e431601a77ab8f674cc86b6",
-          "cluster_name": "MyCluster5",
-          "created_date": "2020-02-12 02:30:49",
-          "properties": {
-            "clustersettings": [
-              {
-                "name": "containerInsights",
-                "value": "enabled"
-              }
-            ],
-            "tags": [
-              {
-                "key": "environment",
-                "value": "production"
-              },
-              {
-                "key": "storage",
-                "value": "production"
-              }
-            ]
-          },
-          "region": "us-east-1a",
-          "templateformat": "2010-09-09",
-          "type": "AWS::ECS::Cluster",
-          "updated_date": "2020-02-12 02:30:49"
-        },
-        "xml": {
-          "name": "ClusterResponse"
         }
       },
       "DeleteResponse": {
