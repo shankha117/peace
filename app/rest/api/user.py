@@ -5,10 +5,6 @@ from app.rest.utils import expect, required_body, required_params
 from app.rest.services.users import User_Service
 
 
-@peace_bp.route('/')
-def hello_world():
-    return 'Hello, World!'
-
 @peace_bp.route('/users', methods=['POST'])
 @required_body(fields=['id', 'first_name', 'email'])
 def create_user():
@@ -53,7 +49,7 @@ def create_user():
 
 @peace_bp.route('/users', methods=['GET'])
 @required_params(fields=["page"])
-def get_all_cluster():
+def get_all_users():
     try:
 
         name = expect(request.args.get('name'), str, 'name')

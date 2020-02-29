@@ -42,9 +42,7 @@ class User_Service(object):
                 else:
                     attribute = sort
 
-            print(sort_order, attribute, name, page, limit)
-
-            data, count = User_Data_Layer().get_all_cluster(sort_order=sort_order, sort_by=attribute, name=name,
+            data, count = User_Data_Layer().get_all_users(sort_order=sort_order, sort_by=attribute, name=name,
                                                             page=page - 1, limit=limit)
 
             next = True if count > (limit * page) else False

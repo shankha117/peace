@@ -33,11 +33,11 @@ class User_Data_Layer(Model):
 
             data = self.save(doc, index=User.ID.value)
 
-            cluster_id = data.inserted_id
+            user_id = data.inserted_id
 
-            current_app.logger.info("new user created {0}".format(cluster_id))
+            current_app.logger.info("new user created {0}".format(user_id))
 
-            return cluster_id
+            return user_id
 
         except Exception as e:
             current_app.logger.error(traceback.format_exc())
@@ -54,7 +54,7 @@ class User_Data_Layer(Model):
             current_app.logger.error(traceback.format_exc())
             raise Exception(e)
 
-    def get_all_cluster(self, sort_order: str, sort_by: str, name: str, page: int, limit: int):
+    def get_all_users(self, sort_order: str, sort_by: str, name: str, page: int, limit: int):
 
         try:
             match = {}
